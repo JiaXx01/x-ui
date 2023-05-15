@@ -2,14 +2,15 @@
   <Teleport to="body">
     <div
       id="x-selector"
-      class="absolute left-1/2 -translate-x-1/2 top-10 border rounded bg-white p-2 pb-0 outline-none"
+      class="absolute left-1/2 -translate-x-1/2 top-10 border rounded bg-white p-2 pb-0 outline-none text-gray-500"
       tabindex="-1"
       v-if="status"
       @blur="onSelectorLoseFocus"
     >
       <input
         id="x-select-input"
-        class="border rounded outline-none px-1"
+        class="border rounded outline-none px-1 h-6 text-sm"
+        :placeholder="placeholder ? placeholder : ''"
         style="width: 500px"
         ref="inputRef"
         v-model="inputContent"
@@ -22,17 +23,23 @@
         @mouseleave="curMouseIndex = null"
       >
         <li
-          class="rounded px-1 cursor-pointer last:mb-2 text-gray-500"
+          class="rounded px-1 cursor-pointer last:mb-2 flex items-center"
           :class="{
             'bg-gray-50': index === curMouseIndex,
-            '!bg-blue-100': index === curKeyboardIndex
+            '!bg-blue-700 text-white': index === curKeyboardIndex
           }"
           v-for="(item, index) in _options"
           :key="index"
           @mouseenter="curMouseIndex = index"
           @click="clickItem(index)"
         >
+          <span class="mr-1" v-if="item?.icon">
+            <svg class="icon" aria-hidden="true">
+              <use :xlink:href="item.icon"></use>
+            </svg>
+          </span>
           <span class="px-1" v-html="item.label"></span>
+          <span class="ml-auto text-xs">{{ item.remarks }}</span>
         </li>
       </ul>
     </div>
@@ -43,7 +50,9 @@
 import { ref, watch } from 'vue'
 
 interface OptionProp {
+  icon?: string
   label: string
+  remarks?: string
   onSelect: () => void
   similar?: number
 }
@@ -51,6 +60,7 @@ interface OptionProp {
 interface Props {
   modelValue: boolean
   options: OptionProp[]
+  placeholder?: string
   width?: number | string
 }
 
@@ -121,7 +131,11 @@ const filterOptions = () => {
       keywordIndexArr.forEach(index => {
         if (index === -1) return
         const s = labelStrArr[index]
-        labelStrArr.splice(index, 1, `<span class="text-blue-700">${s}</span>`)
+        labelStrArr.splice(
+          index,
+          1,
+          `<span class="text-blue-200 font-bold">${s}</span>`
+        )
       })
       item.label = labelStrArr.join('')
 
@@ -303,5 +317,13 @@ const clickItem = (index: number) => {
 .x-scrollbar::-webkit-scrollbar-thumb:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
 }
 </style>

@@ -12,7 +12,9 @@ import XSelect from '@/components/select/XSelect.vue'
 const isShow = ref(false)
 const options = ref([
   {
+    icon: '#icon-xingxing',
     label: 'javascript',
+    remarks: '跳转到JavaScript编辑器',
     onSelect() {
       console.log('javascript')
     }
