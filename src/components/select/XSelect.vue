@@ -115,9 +115,9 @@ const filterOptions = () => {
     const item = Object.assign({}, _item)
     const isMatch = reg.test(item.label)
 
-    const queryStrArr = queryStr.split('')
-    const keywordIndexArr: number[] = []
     if (isMatch) {
+      const queryStrArr = queryStr.split('')
+      const keywordIndexArr: number[] = []
       // 计算关键字索引
       let keywordIndex = 0
       queryStrArr.forEach(keyword => {
